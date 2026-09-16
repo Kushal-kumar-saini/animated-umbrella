@@ -1,0 +1,215 @@
+MongoDB CRUD Practice Log
+
+Date: 15 September 2026
+Database: PCEA24CY033
+Collection: products
+Environment: MongoDB Atlas + mongosh
+
+1. Product Data Creation
+
+Created 50 product documents in the products collection using a JavaScript for loop.
+
+for (let i = 1; i <= 50; i++) {
+    db.products.insertOne({
+        productId: i,
+        productName: "Product " + i,
+        category:
+            i % 5 === 0 ? "Laptop" :
+            i % 5 === 1 ? "Mobile" :
+            i % 5 === 2 ? "Headphones" :
+            i % 5 === 3 ? "Keyboard" :
+                          "Mouse",
+        brand:
+            i % 3 === 0 ? "Dell" :
+            i % 3 === 1 ? "Samsung" :
+                          "HP",
+        price: 1000 + (i * 500),
+        stock: 10 + i,
+        rating: 3 + ((i % 3) * 0.5),
+        inStock: i % 4 !== 0,
+        tags: [
+            "electronics",
+            i % 2 === 0 ? "featured" : "new"
+        ],
+        seller: {
+            sellerId: 1000 + i,
+            sellerName: "Seller " + i
+        },
+        createdAt: new Date()
+    });
+}
+2. Updating Product 20 Price
+
+Updated the price of Product 20 using updateMany().
+
+db.products.updateMany(
+    { productId: 20 },
+    { $set: { price: 17000 } }
+)
+
+Result:
+
+acknowledged: true
+matchedCount: 2
+modifiedCount: 2
+
+Both documents with productId: 20 were updated.
+
+3. Updating Product 20 Seller Name
+
+Updated the seller name of the first matching Product 20 document.
+
+db.products.updateOne(
+    { productId: 20 },
+    { $set: { "seller.sellerName": "Aditya Store" } }
+)
+
+Result:
+
+acknowledged: true
+matchedCount: 1
+modifiedCount: 1
+
+The updated document contains:
+
+seller: {
+    sellerId: 1020,
+    sellerName: "Aditya Store"
+}
+
+The second Product 20 document remained:
+
+seller: {
+    sellerId: 1020,
+    sellerName: "Seller 20"
+}
+4. Increasing Product 20 Stock
+
+Increased the stock of the first matching Product 20 document by 20.
+
+db.products.updateOne(
+    { productId: 20 },
+    { $inc: { stock: 20 } }
+)
+
+The stock changed from:
+
+30
+
+to:
+
+50
+5. Checking Product 20
+db.products.find({ productId: 20 })
+
+The first Product 20 document contained:
+
+{
+    productId: 20,
+    productName: "Product 20",
+    category: "Laptop",
+    brand: "HP",
+    price: 17000,
+    stock: 50,
+    inStock: false,
+    tags: ["electronics", "featured"],
+    seller: {
+        sellerId: 1020,
+        sellerName: "Aditya Store"
+    }
+}
+
+The second Product 20 document remained with:
+
+stock: 30
+sellerName: "Seller 20"
+6. Removing the Rating Field
+
+Removed the rating field from the first matching Product 20 document.
+
+db.products.updateOne(
+    { productId: 20 },
+    { $unset: { rating: "" } }
+)
+
+Result:
+
+acknowledged: true
+matchedCount: 1
+modifiedCount: 1
+7. MongoDB Operators Practiced
+$set
+
+Used to create or modify a field.
+
+db.products.updateOne(
+    { productId: 20 },
+    { $set: { price: 17000 } }
+)
+$inc
+
+Used to increase or decrease a numeric field.
+
+db.products.updateOne(
+    { productId: 20 },
+    { $inc: { stock: 20 } }
+)
+$unset
+
+Used to remove a field.
+
+db.products.updateOne(
+    { productId: 20 },
+    { $unset: { rating: "" } }
+)
+Nested Field Update
+
+Used dot notation to update a nested field.
+
+"seller.sellerName"
+
+Example:
+
+db.products.updateOne(
+    { productId: 20 },
+    { $set: { "seller.sellerName": "Aditya Store" } }
+)
+8. Verification Commands
+
+Count all documents:
+
+db.products.countDocuments()
+
+Find Product 20:
+
+db.products.find({ productId: 20 })
+
+Find one Product 20:
+
+db.products.findOne({ productId: 20 })
+
+Show all products:
+
+db.products.find()
+9. Practical Summary
+
+The practical covered:
+
+Creating product documents
+Working with MongoDB Atlas
+Using mongosh
+find()
+findOne()
+updateOne()
+updateMany()
+$set
+$inc
+$unset
+Nested document fields
+Dot notation
+Verifying update results
+Understanding matchedCount
+Understanding modifiedCount
+
+Project/Database: E-Commerce products Collection
+Practice Document: FACE2
